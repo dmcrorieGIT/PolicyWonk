@@ -38,6 +38,8 @@ class SimulatorGame:
     WEEKS_NEEDED_FOURTH_LEVEL = 560
     work_weeks_missed = 0
     consecutive_weeks_worked = 0
+    has_worked_this_week = False
+    employment_static_amount = 200
 
     # socialization state information
     has_socialized_this_week = False
@@ -371,4 +373,13 @@ class SimulatorGame:
             percent_of_total_wealth = 0.12
 
         return int(total_wealth_by_weeks * percent_of_total_wealth)
+
+    def get_weeks_needed_for_promotion(self, amount_per_week):
+        if amount_per_week == 200:
+            return self.WEEKS_NEEDED_SECOND_LEVEL
+        elif amount_per_week == 500:
+            return self.WEEKS_NEEDED_THIRD_LEVEL
+        elif amount_per_week == 1000:
+            return self.WEEKS_NEEDED_FOURTH_LEVEL
+
     #------------------------------------------------- Utils -----------------------------------------------------#
