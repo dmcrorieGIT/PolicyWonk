@@ -47,11 +47,19 @@ class SimulatorGame:
     # health state information
     has_practiced_self_care_this_week = False
 
-    # anti-social behaviour informaiton
+    # anti-social behaviour information
     NUMBER_OF_CRIMES_COMMITTED = 0
 
     # pleasure state information
     has_done_something_fun_this_week = False
+    # law information
+    is_incarcerated = False
+    former_convict = False
+    NUMBER_OF_INCARCERATIONS = 0
+    WEEKS_SINCE_LAST_INCARCERATION = 0
+    WEEKS_OF_PUNISHMENT = 0
+
+    
 
     def __init__(self, name, user_type):
         self.name = name
@@ -65,11 +73,16 @@ class SimulatorGame:
             if self.is_human():
                 if self.has_not_exceeded_game_time():
                     if self.has_not_exceeded_weekly_actions():
-                        print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats")
-                        action_to_perform = int(input())
-                        system('clear')
-                        if self.invoke_action_on_number(action_to_perform):
-                            self.actions_performed_this_week += 1
+                        if self.is_incarcerated:
+                            print("Incarerated, can't take action")
+                            self.police_action()
+                            self.week_end()
+                        else:
+                            print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats")
+                            action_to_perform = int(input())
+                            system('clear')
+                            if self.invoke_action_on_number(action_to_perform):
+                                self.actions_performed_this_week += 1
                     else:
                         self.week_end()
                 else:
@@ -261,9 +274,9 @@ class SimulatorGame:
                 print("Agent did not find work...")
 
     def anti_social_action(self):
-        #agent commits crime - recieves wealth, becomes better, chance of police
-        if self.NUMBER_OF_CRIMES_COMMITTED != 0:
-            crime_multiplier = 1 + self.NUMBER_OF_CRIMES_COMMITTED/10
+        #agent commits crime - recieves wealth, becomes better, chance of incarceration
+        self.NUMBER_OF_CRIMES_COMMITTED += 1
+        crime_multiplier = 1 + self.NUMBER_OF_CRIMES_COMMITTED/10
         
         amount_earned = (self.life_element_state.education.level * (2*self.life_element_state.employment.amount_per_week)) * crime_multiplier
         print("Agent is committing a crime. Will they be caught?")
@@ -271,11 +284,27 @@ class SimulatorGame:
         investigation = self.random_roll() + self.NUMBER_OF_CRIMES_COMMITTED/100
         if investigation >= 0.95:
             print("Agent is caught. Incarceration")
-            #incarceration action
+            self.police_action()
         else:
             print("Crime is a success! You've gotten better at it.")
             print("Agent Earned $" + amount_earned)
             self.life_element_state.wealth.Deposit(amount_earned)
+
+    def police_action(self):
+        if not self.is_incarcerated:
+            self.is_incarcerated = True
+            self.NUMBER_OF_INCARCERATIONS += 1
+            self.WEEKS_OF_PUNISHMENT = self.NUMBER_OF_CRIMES_COMMITTED*self.NUMBER_OF_INCARCERATIONS
+            print("You have been punished to serve "+self.WEEKS_OF_PUNISHMENT+" weeks in prison.")
+        else:
+            self.WEEKS_SINCE_LAST_INCARCERATION += 1
+            if self.WEEKS_SINCE_LAST_INCARCERATION >= self.WEEKS_OF_PUNISHMENT:
+                self.is_incarcerated = False
+                self.former_convict = True
+                self.WEEKS_OF_PUNISHMENT = 0
+                self.WEEKS_SINCE_LAST_INCARCERATION = 0
+                print("You have been released from prison.")
+
 
     
     def socialize_action(self):
