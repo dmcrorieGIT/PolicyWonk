@@ -158,6 +158,7 @@ class SimulatorGame:
         self.check_socialization()
         self.check_health()
         self.check_pleasure()
+        self.check_for_new_social_class()
         self.actions_performed_this_week = 0
         self.number_of_weeks_passed += 1
         self.new_week_start()
@@ -199,6 +200,23 @@ class SimulatorGame:
         if not self.has_done_something_fun_this_week:
             if not self.life_element_state.pleasure.pleasure_withdrawl(0.1):
                 self.pleasure_withdrawl_problems()
+    
+    def check_for_new_social_class(self):
+        current_wealth = self.life_element_state.wealth.money
+        if current_wealth < 9000:
+            self.agent_in_play.social_class.change_social_class("Underclass")
+        elif current_wealth > 9000 and current_wealth < 18000:
+            self.agent_in_play.social_class.change_social_class("Working Poor")
+        elif current_wealth > 18000 and current_wealth < 46000:
+            self.agent_in_play.social_class.change_social_class("Working")
+        elif current_wealth > 46000 and current_wealth < 76000:
+            self.agent_in_play.social_class.change_social_class("Lower Middle")
+        elif current_wealth > 76000 and current_wealth < 1000000:
+            self.agent_in_play.social_class.change_social_class("Upper Middle")
+        elif current_wealth > 1000000 and current_wealth < 100000000:
+            self.agent_in_play.social_class.change_social_class("Lower Upper")
+        elif current_wealth > 100000000:
+            self.agent_in_play.social_class.change_social_class("Upper Upper")
 
     def promotion(self):
         amount_per_week = self.life_element_state.employment.amount_per_week
@@ -348,17 +366,18 @@ class SimulatorGame:
         print("Agent is taking care of himself")
 
     def print_stats(self):
-        print("Total weeks passed: " + str(self.number_of_weeks_passed))
+        print("Social Status:           " + self.agent_in_play.social_class.class_identification)
+        print("Total weeks passed:      " + str(self.number_of_weeks_passed))
         print("Actions taken this week: " + str(self.actions_performed_this_week))
         print("")
-        print("Social Attitudes: " + self.percentage_from_float(self.life_element_state.social_attitudes.average_value()))
-        print("Health: " + self.percentage_from_float(self.life_element_state.health.average_value()))
-        print("Wealth: " + str(self.life_element_state.wealth.money))
-        print("Education: " + self.educational_attainment_from_tier(self.life_element_state.education.level))
-        print("Pleasure: " + self.percentage_from_float(self.life_element_state.pleasure.pleasure_level))
-        print("Social Life: " + self.percentage_from_float(self.life_element_state.social_life.satisfaction))
-        print("Employment: " + str(200) + "$ /week")
-        print("Law: " + self.percentage_from_float(0.3))
+        print("Social Attitudes:        " + self.percentage_from_float(self.life_element_state.social_attitudes.average_value()))
+        print("Health:                  " + self.percentage_from_float(self.life_element_state.health.average_value()))
+        print("Wealth:                  " + str(self.life_element_state.wealth.money))
+        print("Education:               " + self.educational_attainment_from_tier(self.life_element_state.education.level))
+        print("Pleasure:                " + self.percentage_from_float(self.life_element_state.pleasure.pleasure_level))
+        print("Social Life:             " + self.percentage_from_float(self.life_element_state.social_life.satisfaction))
+        print("Employment:              " + str(200) + "$ /week")
+        print("Law:                     " + self.percentage_from_float(0.3))
         print("")
 
     #------------------------------------------------ Actions ---------------------------------------------------#

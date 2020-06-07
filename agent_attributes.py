@@ -40,3 +40,8 @@ class SocialClass(Attribute):
     permitted_values = ["Underclass", "Working Poor", "Working", "Lower Middle", "Upper Middle", "Lower Upper", "Upper Upper"]
     def __init__(self, class_identification):
         self.class_identification = class_identification
+    
+    def change_social_class(self, new_social_class):
+        if new_social_class not in self.permitted_values:
+            raise Exception("New social class not in permitted values")
+        self.class_identification = new_social_class
