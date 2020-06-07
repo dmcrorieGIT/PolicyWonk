@@ -304,8 +304,9 @@ class SimulatorGame:
             self.has_worked_this_week = True
             self.consecutive_weeks_worked += 1
             amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
-            self.life_element_state.wealth.Deposit(amount_earned)
-            print("Agent working, made " + str(amount_earned) + "$")
+            taxable_earnings = amount_earned - self.get_taxes_on_income(amount_earned)
+            self.life_element_state.wealth.Deposit(taxable_earnings)
+            print("Agent working, made " + str(taxable_earnings) + "$")
         else:
             self.work_weeks_missed = 0
             self.has_worked_this_week = True
@@ -438,7 +439,7 @@ class SimulatorGame:
     #------------------------------------------------- Utils -----------------------------------------------------#
 
     def test(self):
-        self.life_element_state.wealth.Deposit(100000)
+        self.consecutive_weeks_worked += 60
 
     def end_game(self):
         print("Simulation has ended, thanks for playing!")
@@ -491,6 +492,10 @@ class SimulatorGame:
             return self.WEEKS_NEEDED_THIRD_LEVEL
         elif amount_per_week == 1000:
             return self.WEEKS_NEEDED_FOURTH_LEVEL
+
+    def get_taxes_on_income(self, amount):
+        # TODO: use policy to make this more real
+        return amount * 0.2
     
     def clear_screen(self):
         if name == "posix":
