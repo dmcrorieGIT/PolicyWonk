@@ -47,6 +47,9 @@ class SimulatorGame:
     # health state information
     has_practiced_self_care_this_week = False
 
+    # anti-social behaviour informaiton
+    NUMBER_OF_CRIMES_COMMITTED = 0
+
     def __init__(self, name, user_type):
         self.name = name
         self.user_type
@@ -254,7 +257,22 @@ class SimulatorGame:
                 print("Agent did not find work...")
 
     def anti_social_action(self):
-        print("Agent stealing some shit")
+        #agent commits crime - recieves wealth, becomes better, chance of police
+        if self.NUMBER_OF_CRIMES_COMMITTED != 0:
+            crime_multiplier = 1 + self.NUMBER_OF_CRIMES_COMMITTED/10
+        
+        amount_earned = (self.life_element_state.education.level * (2*self.life_element_state.employment.amount_per_week)) * crime_multiplier
+        print("Agent is committing a crime. Will they be caught?")
+
+        investigation = self.random_roll() + self.NUMBER_OF_CRIMES_COMMITTED/100
+        if investigation >= 0.95:
+            print("Agent is caught. Incarceration")
+            #incarceration action
+        else:
+            print("Crime is a success! You've gotten better at it.")
+            print("Agent Earned $" + amount_earned)
+            self.life_element_state.wealth.Deposit(amount_earned)
+
     
     def socialize_action(self):
         self.life_element_state.social_life.Socialize(0.1)
