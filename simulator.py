@@ -168,9 +168,7 @@ class SimulatorGame:
 
     def check_study(self):
         if self.in_study_program:
-            if self.has_studied_this_week:
-                self.total_weeks_studied_in_program += 1
-            else:
+            if not self.has_studied_this_week:
                 self.study_weeks_missed + 1
                 if self.study_weeks_missed >= self.EDUCATION_PROGRAM_DROPOUT_CUTOFF:
                     dropout_check = self.random_roll()
