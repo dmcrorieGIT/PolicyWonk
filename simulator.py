@@ -116,6 +116,7 @@ class SimulatorGame:
         # TODO: check to see if the agent studied this week; if they didn't, add to number of weeks not studied. If the number
         # exceeds the threshold for the degree they are working towards (i.e., WEEKS_NEEDED_FOR_BACHELOR_DEGREE), then they drop out,
         # setting their in_study_program to False and their number_of_weeks_study to 0
+        self.check_study()
         self.check_work()
         self.check_socialization()
         self.check_health()
