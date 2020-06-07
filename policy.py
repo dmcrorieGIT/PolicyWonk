@@ -1,4 +1,8 @@
 class StatusQuo:
+
+    def __init__(self):
+        pass
+
     raceDict = {
         "White":{
             "Illness": 0.0075,
@@ -143,9 +147,9 @@ class StatusQuo:
         # TODO: do dis
         return 0.2
     
-    def taxes(self):
+    def taxes(self, agent_characteristics):
         # TODO: do dis
-        return 0.2
+        return self.socialClassDict[agent_characteristics[4]]
 
     def depression_percentage(self):
         # TODO: do this as well

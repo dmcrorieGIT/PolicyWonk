@@ -16,6 +16,7 @@ class SimulatorGame:
     # game state information
     agent_in_play = 0
     life_element_state = 0
+    policy_used = 0
     number_of_weeks_passed = 0
     actions_performed_this_week = 0
 
@@ -94,12 +95,16 @@ class SimulatorGame:
     def build_simulation(self):
         self.build_agent()
         self.build_life_elements()
+        self.build_policy()
     
     def build_agent(self):
         self.agent_in_play = agent.Agent("Andrew", 24, "Hispanic", "Non-Binary", "Male", "Underclass")
 
     def build_life_elements(self):
         self.life_element_state = life_elements.LifeElements()
+    
+    def build_policy(self):
+        self.policy_used = policy.StatusQuo()
 
     # -------------------------------- Checks ---------------------------------------------#
     def is_human(self):
@@ -113,11 +118,11 @@ class SimulatorGame:
 
     def check_for_depressed_or_illness(self):
         if self.depressed:
-            if self.random_roll() <= policy.StatusQuo.depression_percentage():
+            if self.random_roll() <= self.policy_used.depression_percentage():
                 print("Can't take action, depressed")
                 return True
         if self.physically_ill:
-            if self.random_roll() <= policy.StatusQuo.illness_percentage():
+            if self.random_roll() <= self.policy_used.illness_percentage():
                 print("Can't take action, too ill")
                 return True
         return False
@@ -496,7 +501,7 @@ class SimulatorGame:
 
     def get_taxes_on_income(self, amount):
         # TODO: use policy to make this more real
-        return amount * policy.StatusQuo.taxes()
+        return amount * self.policy_used.taxes(self.agent_attribute_checks())
     
     def clear_screen(self):
         if name == "posix":
