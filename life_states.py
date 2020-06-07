@@ -58,15 +58,24 @@ class Education(LifeState):
         self.level += 1
 
 class Pleasure(LifeState):
-    category_1 = 0.5
-    category_2 = 0.5
+    pleasure_level = 0
 
-    def __init__(self, category_1, category_2):
-        self.category_1 = category_1
-        self.category_2 = category_2
+    def __init__(self, pleasure_level):
+        self.pleasure_level = pleasure_level
 
     def average_value(self):
         return (self.category_1 + self.category_2) / 2
+
+    def engage_in_fun_activity(self, pleasure_value):
+        self.pleasure_level += pleasure_value
+        if self.pleasure_level > 1:
+            self.pleasure_level = 1
+    
+    def pleasure_withdrawl(self, withdrawl_value):
+        self.pleasure_level -= withdrawl_value
+        if self.pleasure_level < 0:
+            self.pleasure_level = 0
+        return self.pleasure_level > 0.25
 
 class SocialLife(LifeState):
     satisfaction = 0

@@ -14,7 +14,7 @@ class LifeElements:
         self.health = life_states.Health(1, 1)
         self.wealth = life_states.Wealth(2000)
         self.education = life_states.Education(1)
-        self.pleasure = life_states.Pleasure(1, 1)
+        self.pleasure = life_states.Pleasure(1)
         self.social_life = life_states.SocialLife(0.5)
         self.employment = life_states.Employment(200)
         self.law = life_states.Law(1, 1)

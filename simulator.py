@@ -50,6 +50,9 @@ class SimulatorGame:
     # anti-social behaviour informaiton
     NUMBER_OF_CRIMES_COMMITTED = 0
 
+    # pleasure state information
+    has_done_something_fun_this_week = False
+
     def __init__(self, name, user_type):
         self.name = name
         self.user_type
@@ -125,6 +128,7 @@ class SimulatorGame:
         self.check_work()
         self.check_socialization()
         self.check_health()
+        self.check_pleasure()
         self.actions_performed_this_week = 0
         self.number_of_weeks_passed += 1
         self.new_week_start()
@@ -157,6 +161,11 @@ class SimulatorGame:
                 self.mental_health_problems()
             if not self.life_element_state.health.decrease_in_physical_health(0.1):
                 self.physical_health_problems()
+
+    def check_pleasure(self):
+        if not self.has_done_something_fun_this_week:
+            if not self.life_element_state.pleasure.pleasure_withdrawl(0.1):
+                self.pleasure_withdrawl_problems()
 
     def promotion(self):
         amount_per_week = self.life_element_state.employment.amount_per_week
@@ -193,16 +202,11 @@ class SimulatorGame:
         self.has_worked_this_week = False
         self.has_socialized_this_week = False
         self.has_practiced_self_care_this_week = False
+        self.has_done_something_fun_this_week = False
 
     #------------------------------------------------ Actions ---------------------------------------------------#
 
-    def study_action(self):
-        # TODO: check to see if is_in_study_program; if they aren't, the study action does a random roll to see if they
-        # enroll. If they are already in a study program, then:
-        #         1. add to number of weeks studied in program
-        #         2. set the value of studied_this_week to True
-        
-        
+    def study_action(self):    
         if not self.in_study_program:
             enrollment_check = self.random_roll()
             if enrollment_check >= 0.2: #have check affected by attributes
@@ -280,6 +284,8 @@ class SimulatorGame:
         print("Agent socializing")
 
     def basic_pleasure_action(self):
+        self.life_element_state.pleasure.engage_in_fun_activity(0.15)
+        self.has_done_something_fun_this_week = True
         print("Agent living that good life")
     
     def self_care_action(self):
@@ -295,7 +301,7 @@ class SimulatorGame:
         print("Health: " + self.percentage_from_float(self.life_element_state.health.average_value()))
         print("Wealth: " + str(self.life_element_state.wealth.money))
         print("Education: " + self.educational_attainment_from_tier(self.life_element_state.education.level))
-        print("Pleasure: " + self.percentage_from_float(self.life_element_state.pleasure.average_value()))
+        print("Pleasure: " + self.percentage_from_float(self.life_element_state.pleasure.pleasure_level))
         print("Social Life: " + self.percentage_from_float(self.life_element_state.social_life.satisfaction))
         print("Employment: " + str(200) + "$ /week")
         print("Law: " + self.percentage_from_float(0.3))
@@ -340,6 +346,10 @@ class SimulatorGame:
     def physical_health_problems(self):
         # TODO: cause problems elsewhere when this is reached
         print("Experiencing physical health issues")
+
+    def pleasure_withdrawl_problems(self):
+        # TODO: cause problems elsewhere when this is reached
+        print("Experiencing burnout")
 
     #--------------------------------------------- Consequences --------------------------------------------------#
 
