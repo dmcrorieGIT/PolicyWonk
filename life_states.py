@@ -63,6 +63,9 @@ class Employment(LifeState):
 
     def average_value(self):
         return (self.category_1 + self.category_2) / 2
+    
+    def raise_employment_status(self, amount):
+        self.amount_per_week = amount
 
 class Law(LifeState):
     category_1 = 0.5

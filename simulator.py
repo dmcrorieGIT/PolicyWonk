@@ -35,6 +35,8 @@ class SimulatorGame:
     WEEKS_NEEDED_FOURTH_LEVEL = 560
     work_weeks_missed = 0
     consecutive_weeks_worked = 0
+    has_worked_this_week = False
+    employment_static_amount = 200
 
 
     def __init__(self, name, user_type):
@@ -108,9 +110,35 @@ class SimulatorGame:
         # TODO: check to see if the agent studied this week; if they didn't, add to number of weeks not studied. If the number
         # exceeds the threshold for the degree they are working towards (i.e., WEEKS_NEEDED_FOR_BACHELOR_DEGREE), then they drop out,
         # setting their in_study_program to False and their number_of_weeks_study to 0
+        self.check_work()
         self.actions_performed_this_week = 0
         self.number_of_weeks_passed += 1
         self.new_week_start()
+
+    def check_work(self):
+        if self.has_worked_this_week:
+            self.consecutive_weeks_worked += 1
+        else:
+            self.work_weeks_missed += 1
+
+        # Terminated or Quit
+        if self.work_weeks_missed >= self.WORK_WEEKS_MISSED_CAUSING_TERMINATION:
+            self.life_element_state.employment.amount_per_week = 0
+            self.consecutive_weeks_worked = 0
+        
+        weeks_needed_for_promotion = self.get_weeks_needed_for_promotion(self.life_element_state.employment.amount_per_week)
+        if self.consecutive_weeks_worked >= weeks_needed_for_promotion:
+            self.promotion()
+
+    def promotion(self):
+        amount_per_week = self.life_element_state.employment.amount_per_week
+        
+        if amount_per_week == 200:
+            self.life_element_state.employment.raise_employment_status(500)
+        elif amount_per_week == 500:
+            self.life_element_state.employment.raise_employment_status(1000)
+        elif amount_per_week == 1000:
+            self.life_element_state.employment.raise_employment_status(2000)
 
     def new_week_start(self):
         weekly_upkeep = self.weekly_upkeep_per_social_class(self.agent_in_play.social_class.class_identification, self.life_element_state.wealth.money)
@@ -137,9 +165,12 @@ class SimulatorGame:
         print("Agent studying")
 
     def work_action(self):
-        amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
-        self.life_element_state.wealth.Deposit(amount_earned)
-        print("Agent working, made " + str(amount_earned) + "$")
+        if self.life_element_state.employment.amount_per_week > 0:
+            amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
+            self.life_element_state.wealth.Deposit(amount_earned)
+            print("Agent working, made " + str(amount_earned) + "$")
+        else:
+            pass
 
     def anti_social_action(self):
         print("Agent stealing some shit")
@@ -220,4 +251,14 @@ class SimulatorGame:
             percent_of_total_wealth = 0.12
 
         return int(total_wealth_by_weeks * percent_of_total_wealth)
+
+    def get_weeks_needed_for_promotion(self, amount_per_week):
+        if amount_per_week == 200:
+            return self.WEEKS_NEEDED_SECOND_LEVEL
+        elif amount_per_week == 500:
+            return self.WEEKS_NEEDED_THIRD_LEVEL
+        elif amount_per_week == 1000:
+            return self.WEEKS_NEEDED_FOURTH_LEVEL
+        elif amount_per_week == 2000:
+            return 9999999999999999
     #------------------------------------------------- Utils -----------------------------------------------------#

@@ -31,11 +31,12 @@ class Sex(Attribute):
 
 class SexualOrientation(Attribute):
     sexual_orientation_name = "LGBTQ+"
-    permitted_values = ["LGBTQ+"]
+    permitted_values = ["LGBTQ+", "Non-LGBTQ+"]
     def __init__(self, sexual_orientation_name):
         self.sexual_orientation_name = sexual_orientation_name
 
 class SocialClass(Attribute):
     class_identification = "Underclass"
+    permitted_values = ["Underclass", "Working Poor", "Working", "Lower Middle", "Upper Middle", "Lower Upper", "Upper Upper"]
     def __init__(self, class_identification):
         self.class_identification = class_identification
