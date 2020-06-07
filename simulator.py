@@ -126,10 +126,10 @@ class SimulatorGame:
         # enroll. If they are already in a study program, then:
         #         1. add to number of weeks studied in program
         #         2. set the value of studied_this_week to True
-        if not self.is_in_study_program:
+        if not self.in_study_program:
             enrollment_check = self.random_roll()
             if enrollment_check >= 0.2:
-                self.is_in_study_program = True
+                self.in_study_program = True
         else:
             self.has_studied_this_week = True
             self.total_weeks_studied_in_program += 1
@@ -196,7 +196,7 @@ class SimulatorGame:
         elif 6:
             return "Doctorate (PhD)"
 
-    def random_roll():
+    def random_roll(self):
         return random.randint(0,1)
     
     def weekly_upkeep_per_social_class(self, social_class, total_wealth):
