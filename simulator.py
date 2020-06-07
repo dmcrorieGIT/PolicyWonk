@@ -387,10 +387,16 @@ class SimulatorGame:
         print("Agent is taking care of themself")
 
     def print_stats(self):
-        print("Social Status:           " + self.agent_in_play.social_class.class_identification)
+        print("General Information")
         print("Total weeks passed:      " + str(self.number_of_weeks_passed))
         print("Actions taken this week: " + str(self.actions_performed_this_week))
-        print("")
+        print("\nAgent Attributes")
+        print("Social Status:           " + self.agent_in_play.social_class.class_identification)
+        print("Age:                     " + str(self.agent_in_play.age.years_old))
+        print("Race:                    " + self.agent_in_play.race.race_name)
+        print("Sex:                     " + self.agent_in_play.sex.sex_classification)
+        print("Sexual Orientation:      " + self.agent_in_play.sexual_orientation.sexual_orientation_name)
+        print("\nLife State Characteristics")
         print("Social Attitudes:        " + self.percentage_from_float(self.life_element_state.social_attitudes.average_value()))
         print("Health:                  " + self.percentage_from_float(self.life_element_state.health.average_value()))
         print("Wealth:                  " + str(self.life_element_state.wealth.money))
