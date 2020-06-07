@@ -46,6 +46,8 @@ class SimulatorGame:
 
     # health state information
     has_practiced_self_care_this_week = False
+    depressed = False
+    physically_ill = False
 
     # anti-social behaviour information
     NUMBER_OF_CRIMES_COMMITTED = 0
@@ -80,7 +82,7 @@ class SimulatorGame:
                         else:
                             print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats")
                             action_to_perform = int(input())
-                            system('clear')
+                            self.clear_screen()
                             if self.invoke_action_on_number(action_to_perform):
                                 self.actions_performed_this_week += 1
                     else:
@@ -107,6 +109,17 @@ class SimulatorGame:
 
     def has_not_exceeded_weekly_actions(self):
         return self.actions_performed_this_week < self.ACTIONS_ALLOWED_PER_WEEK
+
+    def check_for_depressed_or_illness(self):
+        if self.depressed:
+            if self.random_roll() <= 0.2:
+                print("Can't take action, depressed")
+                return True
+        if self.physically_ill:
+            if self.random_roll() <= 0.2:
+                print("Can't take action, too ill")
+                return True
+        return False
     # -------------------------------- Checks ---------------------------------------------#
 
     def invoke_action_on_number(self, number):
@@ -172,8 +185,12 @@ class SimulatorGame:
         if not self.has_practiced_self_care_this_week:
             if not self.life_element_state.health.decrease_in_mental_health(0.1):
                 self.mental_health_problems()
+            elif self.depressed:
+                self.clear_mental_health_problems()
             if not self.life_element_state.health.decrease_in_physical_health(0.1):
                 self.physical_health_problems()
+            elif self.physically_ill:
+                self.clear_physical_health_problems()
 
     def check_pleasure(self):
         if not self.has_done_something_fun_this_week:
@@ -219,7 +236,9 @@ class SimulatorGame:
 
     #------------------------------------------------ Actions ---------------------------------------------------#
 
-    def study_action(self):    
+    def study_action(self):
+        if self.check_for_depressed_or_illness():
+            return
         if not self.in_study_program:
             enrollment_check = self.random_roll()
             if enrollment_check >= 0.2: #have check affected by attributes
@@ -257,6 +276,8 @@ class SimulatorGame:
         
 
     def work_action(self):
+        if self.check_for_depressed_or_illness():
+            return
         if self.life_element_state.employment.amount_per_week > 0:
             self.has_worked_this_week = True
             self.consecutive_weeks_worked += 1
@@ -369,12 +390,20 @@ class SimulatorGame:
         print("Uh-oh, looks like somebody's in debt ;)")
 
     def mental_health_problems(self):
-        # TODO: cause problems elsewhere when this is reached
+        self.depressed = True
         print("Experiencing mental health issues")
     
+    def clear_mental_health_problems(self):
+        self.depressed = False
+        print("Clearing mental health issues")
+    
     def physical_health_problems(self):
-        # TODO: cause problems elsewhere when this is reached
+        self.physically_ill = True
         print("Experiencing physical health issues")
+    
+    def clear_physical_health_problems(self):
+        self.physically_ill = False
+        print("Clearing physical health issues")
 
     def pleasure_withdrawl_problems(self):
         # TODO: cause problems elsewhere when this is reached
@@ -438,5 +467,11 @@ class SimulatorGame:
             return self.WEEKS_NEEDED_THIRD_LEVEL
         elif amount_per_week == 1000:
             return self.WEEKS_NEEDED_FOURTH_LEVEL
+    
+    def clear_screen(self):
+        if name == "posix":
+            system('clear')
+        elif name == "nt":
+            system('cls')
 
     #------------------------------------------------- Utils -----------------------------------------------------#
