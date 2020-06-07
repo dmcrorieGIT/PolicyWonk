@@ -138,6 +138,9 @@ class SimulatorGame:
         elif number == 90:
             self.print_stats()
             return False
+        # SUPER SECRET FUNTIME DEV ACTION :D
+        elif number == 98:
+            self.test()
         elif number == 99:
             self.game_in_progress = False
         else:
@@ -416,7 +419,7 @@ class SimulatorGame:
     #------------------------------------------------- Utils -----------------------------------------------------#
 
     def test(self):
-        print("Testing...")
+        self.life_element_state.wealth.Deposit(100000)
 
     def end_game(self):
         print("Simulation has ended, thanks for playing!")
