@@ -243,7 +243,7 @@ class SimulatorGame:
                 self.study_weeks_missed + 1
                 if self.study_weeks_missed >= self.EDUCATION_PROGRAM_DROPOUT_CUTOFF:
                     dropout_check = self.random_roll()
-                    if dropout_check <= policy.StatusQuo.education_percentage():
+                    if dropout_check <= self.policy_used.education_percentage(self.agent_attribute_checks()):
                         self.in_study_program = False
                         print("You've Dropped Out.")
                     else:
@@ -269,7 +269,7 @@ class SimulatorGame:
         if not self.in_study_program:
             print("Agent not in school - trying to enroll.")
             enrollment_check = self.random_roll() # Random ROLL
-            if enrollment_check >= policy.StatusQuo.education_percentage(): #have check affected by attributes
+            if enrollment_check >= self.policy_used.education_percentage(self.agent_attribute_checks()): #have check affected by attributes
                 self.in_study_program = True
                 print("Successfully enrolled in school.")
             else:
@@ -332,7 +332,7 @@ class SimulatorGame:
         print("Agent is committing a crime. Will they be caught?")
 
         investigation = self.random_roll() + self.NUMBER_OF_CRIMES_COMMITTED/100
-        if investigation >= policy.StatusQuo.law_percentage(self.agent_attribute_checks(), investigation):
+        if investigation >= self.policy_used.law_percentage(self.agent_attribute_checks()):
             print("Agent is caught. Incarceration")
             self.police_action()
         else:
