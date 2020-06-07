@@ -149,7 +149,7 @@ class StatusQuo:
     
     def taxes(self, agent_characteristics):
         # TODO: do dis
-        return self.socialClassDict[agent_characteristics[4]]
+        return self.socialClassDict[agent_characteristics[4].class_identification]["Taxes"]
 
     def depression_percentage(self):
         # TODO: do this as well
