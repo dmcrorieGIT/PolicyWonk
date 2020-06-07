@@ -136,10 +136,13 @@ class SimulatorGame:
         
         if amount_per_week == 200:
             self.life_element_state.employment.raise_employment_status(500)
+            self.employment_static_amount = 500
         elif amount_per_week == 500:
             self.life_element_state.employment.raise_employment_status(1000)
+            self.employment_static_amount = 1000
         elif amount_per_week == 1000:
             self.life_element_state.employment.raise_employment_status(2000)
+            self.employment_static_amount = 2000
 
     def new_week_start(self):
         weekly_upkeep = self.weekly_upkeep_per_social_class(self.agent_in_play.social_class.class_identification, self.life_element_state.wealth.money)
