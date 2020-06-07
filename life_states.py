@@ -45,12 +45,22 @@ class Pleasure(LifeState):
         return (self.category_1 + self.category_2) / 2
 
 class SocialLife(LifeState):
-    category_1 = 0.5
-    category_2 = 0.5
+    satisfaction = 0
 
-    def __init__(self, category_1, category_2):
-        self.category_1 = category_1
-        self.category_2 = category_2
+    def __init__(self, satisfaction):
+        self.satisfaction = satisfaction
+
+    def Socialize(self, satisfaction_increase):
+        self.satisfaction += satisfaction_increase
+        if (self.satisfaction > 1):
+            self.satisfaction = 1
+    
+    def SocialWithdrawl(self, withdrawl_amount):
+        self.satisfaction -= withdrawl_amount
+        if (self.satisfaction < 0):
+            self.satisfaction = 0
+
+        return self.satisfaction > 0.25
 
     def average_value(self):
         return (self.category_1 + self.category_2) / 2

@@ -30,7 +30,7 @@ class SimulatorGame:
 
     # employment state information
     WORK_WEEKS_MISSED_CAUSING_TERMINATION = 4
-    WEEKS_NEEDED_SECOND_LEVEL = 7
+    WEEKS_NEEDED_SECOND_LEVEL = 70
     WEEKS_NEEDED_THIRD_LEVEL = 280
     WEEKS_NEEDED_FOURTH_LEVEL = 560
     work_weeks_missed = 0
@@ -38,6 +38,8 @@ class SimulatorGame:
     has_worked_this_week = False
     employment_static_amount = 200
 
+    # socialization state information
+    has_socialized_this_week = False
 
     def __init__(self, name, user_type):
         self.name = name
@@ -111,6 +113,7 @@ class SimulatorGame:
         # exceeds the threshold for the degree they are working towards (i.e., WEEKS_NEEDED_FOR_BACHELOR_DEGREE), then they drop out,
         # setting their in_study_program to False and their number_of_weeks_study to 0
         self.check_work()
+        self.check_socialization()
         self.actions_performed_this_week = 0
         self.number_of_weeks_passed += 1
         self.new_week_start()
@@ -131,6 +134,11 @@ class SimulatorGame:
         weeks_needed_for_promotion = self.get_weeks_needed_for_promotion(self.life_element_state.employment.amount_per_week)
         if self.consecutive_weeks_worked >= weeks_needed_for_promotion:
             self.promotion()
+    
+    def check_socialization(self):
+        if not self.has_socialized_this_week:
+            if not self.life_element_state.social_life.SocialWithdrawl(0.25):
+                self.social_deprivation()
 
     def promotion(self):
         amount_per_week = self.life_element_state.employment.amount_per_week
@@ -152,6 +160,7 @@ class SimulatorGame:
             print("Uh-oh, looks like somebody's in debt ;)")
         print("Starting a new week, upkeep: " + str(weekly_upkeep) + " \n")
         self.has_worked_this_week = False
+        self.has_socialized_this_week = False
 
     #------------------------------------------------ Actions ---------------------------------------------------#
 
@@ -191,6 +200,8 @@ class SimulatorGame:
         print("Agent stealing some shit")
     
     def socialize_action(self):
+        self.life_element_state.social_life.Socialize(0.1)
+        self.has_socialized_this_week = True
         print("Agent socializing")
 
     def basic_pleasure_action(self):
@@ -208,7 +219,7 @@ class SimulatorGame:
         print("Wealth: " + str(self.life_element_state.wealth.money))
         print("Education: " + self.educational_attainment_from_tier(self.life_element_state.education.level))
         print("Pleasure: " + self.percentage_from_float(self.life_element_state.pleasure.average_value()))
-        print("Social Life: " + self.percentage_from_float(self.life_element_state.social_life.average_value()))
+        print("Social Life: " + self.percentage_from_float(self.life_element_state.social_life.satisfaction))
         print("Employment: " + str(200) + "$ /week")
         print("Law: " + self.percentage_from_float(0.3))
         print("")
@@ -223,6 +234,14 @@ class SimulatorGame:
         return self.random_roll() > 0.2
 
     #---------------------------------------------- Sub-Actions -------------------------------------------------#
+
+    #--------------------------------------------- Consequences --------------------------------------------------#
+
+    def social_deprivation(self):
+        # TODO: social deprivation, cause problems with the other states if this is reached
+        print("Experiencing negative effects of social deprivation...")
+
+    #--------------------------------------------- Consequences --------------------------------------------------#
 
     #------------------------------------------------- Utils -----------------------------------------------------#
 
