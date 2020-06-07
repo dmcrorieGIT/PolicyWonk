@@ -383,11 +383,12 @@ class SimulatorGame:
     #--------------------------------------------- Consequences --------------------------------------------------#
 
     def social_deprivation(self):
-        # TODO: social deprivation, cause problems with the other states if this is reached
+        self.life_element_state.health.decrease_in_mental_health(0.1)
         print("Experiencing negative effects of social deprivation...")
 
     def debt_consequences(self):
-        # TODO: If we're here, that means the agent just went into debt, we need to make bad things happen here
+        self.life_element_state.health.decrease_in_physical_health(0.1)
+        self.life_element_state.health.decrease_in_mental_health(0.1)
         print("Uh-oh, looks like somebody's in debt ;)")
 
     def mental_health_problems(self):
@@ -407,7 +408,7 @@ class SimulatorGame:
         print("Clearing physical health issues")
 
     def pleasure_withdrawl_problems(self):
-        # TODO: cause problems elsewhere when this is reached
+        self.life_element_state.health.decrease_in_mental_health(0.1)
         print("Experiencing burnout")
 
     #--------------------------------------------- Consequences --------------------------------------------------#
