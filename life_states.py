@@ -28,10 +28,13 @@ class Wealth(LifeState):
         self.money += amount
 
 class Education(LifeState):
-    level = 0
+    level = 1
 
     def __init__(self, level):
         self.level = level
+
+    def education_level_up(self):
+        self.level += 1
 
 class Pleasure(LifeState):
     category_1 = 0.5
@@ -73,9 +76,6 @@ class Employment(LifeState):
 
     def average_value(self):
         return (self.category_1 + self.category_2) / 2
-    
-    def raise_employment_status(self, amount):
-        self.amount_per_week = amount
 
 class Law(LifeState):
     category_1 = 0.5

@@ -22,7 +22,10 @@ class SimulatorGame:
     EDUCATION_PROGRAM_DROPOUT_CUTOFF = 60
     HIGHSCHOOL_DROPOUT_CUTOFF = 80
     WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA = 156
+    #WEEKS_NEEDED_FOR_ASSOCIATES_DEGREE = 104
     WEEKS_NEEDED_FOR_BACHELOR_DEGREE = 208
+    WEEKS_NEEDED_FOR_MASTERS_DEGREE = 156
+    WEEKS_NEEDED_FOR_PHD = 208
     in_study_program = False
     has_studied_this_week = False
     total_weeks_studied_in_program = 0
@@ -35,8 +38,6 @@ class SimulatorGame:
     WEEKS_NEEDED_FOURTH_LEVEL = 560
     work_weeks_missed = 0
     consecutive_weeks_worked = 0
-    has_worked_this_week = False
-    employment_static_amount = 200
 
     # socialization state information
     has_socialized_this_week = False
@@ -153,6 +154,22 @@ class SimulatorGame:
             self.life_element_state.employment.raise_employment_status(2000)
             self.employment_static_amount = 2000
 
+    def check_study(self):
+        if self.in_study_program:
+            if self.has_studied_this_week:
+                self.total_weeks_studied_in_program += 1
+            else:
+                self.study_weeks_missed + 1
+                if self.study_weeks_missed >= self.EDUCATION_PROGRAM_DROPOUT_CUTOFF:
+                    dropout_check = self.random_roll()
+                    if dropout_check <= 0.2:
+                        self.in_study_program = False
+                        print("You've Dropped Out.")
+                    else:
+                        print("Dean's Warning: Miss more school and you will be expelled.")
+        
+
+
     def new_week_start(self):
         weekly_upkeep = self.weekly_upkeep_per_social_class(self.agent_in_play.social_class.class_identification, self.life_element_state.wealth.money)
         if not self.life_element_state.wealth.Withdraw(weekly_upkeep):
@@ -169,15 +186,50 @@ class SimulatorGame:
         # enroll. If they are already in a study program, then:
         #         1. add to number of weeks studied in program
         #         2. set the value of studied_this_week to True
+        
+        
         if not self.in_study_program:
             enrollment_check = self.random_roll()
-            if enrollment_check >= 0.2:
+            if enrollment_check >= 0.2: #have check affected by attributes
                 self.in_study_program = True
+                
         else:
             self.has_studied_this_week = True
             self.total_weeks_studied_in_program += 1
-
-        print("Agent studying")
+            
+            education_level = self.life_element_state.education.level
+            
+            switch(education_level){
+                case 1: 
+                    if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA:
+                        self.life_element_state.education.education_level_up()
+                        self.in_study_program = False
+                        print("Congratulations! You've graduated with a Highschool Diploma.")
+                        break;
+                case 2:
+                    if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_BACHELOR_DEGREE:
+                        self.life_element_state.education.education_level_up()
+                        self.in_study_program = False
+                        print("Congratulations! You've graduated with a Bachelor's Degree.")
+                        break;
+                case 3:
+                    if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_MASTERS_DEGREE:
+                        self.life_element_state.education.education_level_up()
+                        self.in_study_program = False
+                        print("Congratulations! You've graduated with a Master's Degree.")
+                        break;
+                case 4:
+                    if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_PHD:
+                        self.life_element_state.education.education_level_up()
+                        self.in_study_program = False
+                        print("Congratulations! You've graduated with a PhD.")
+                        break;
+                default: 
+                    print("Agent studying")
+                    break;   
+            } 
+            
+        
 
     def work_action(self):
         if self.life_element_state.employment.amount_per_week > 0:
@@ -234,6 +286,16 @@ class SimulatorGame:
         return self.random_roll() > 0.2
 
     #---------------------------------------------- Sub-Actions -------------------------------------------------#
+    #---------------------------------------------Attribute Checks-----------------------------------------------#
+    def agent_attribute_checks(self):
+        return self.agent_in_play.get_agent_attribute()
+
+    def education_attribute_modifiers(self):
+        
+
+    
+    
+    #---------------------------------------------Attribute Checks-----------------------------------------------#
 
     #--------------------------------------------- Consequences --------------------------------------------------#
 
@@ -261,12 +323,10 @@ class SimulatorGame:
         elif 2:
             return "Highschool diploma and/or some college"
         elif 3:
-            return "Associates degree or trade certificate"
-        elif 4:
             return "Bachelors degree"
-        elif 5:
+        elif 4:
             return "Masters degree"
-        elif 6:
+        elif 5:
             return "Doctorate (PhD)"
 
     def random_roll(self):
@@ -293,14 +353,4 @@ class SimulatorGame:
             percent_of_total_wealth = 0.12
 
         return int(total_wealth_by_weeks * percent_of_total_wealth)
-
-    def get_weeks_needed_for_promotion(self, amount_per_week):
-        if amount_per_week == 200:
-            return self.WEEKS_NEEDED_SECOND_LEVEL
-        elif amount_per_week == 500:
-            return self.WEEKS_NEEDED_THIRD_LEVEL
-        elif amount_per_week == 1000:
-            return self.WEEKS_NEEDED_FOURTH_LEVEL
-        elif amount_per_week == 2000:
-            return 9999999999999999
     #------------------------------------------------- Utils -----------------------------------------------------#
