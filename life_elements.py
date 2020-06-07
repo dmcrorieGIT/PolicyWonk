@@ -2,7 +2,7 @@ import life_states
 
 class LifeElements:
     health = 0
-    income = 0
+    wealth = 0
     education = 0
     pleasure = 0
     love = 0
@@ -12,10 +12,10 @@ class LifeElements:
 
     def __init__(self):
         self.health = life_states.Health(1, 1)
-        self.income = life_states.Income(1, 1)
-        self.education = life_states.Education(1, 1)
+        self.wealth = life_states.Wealth(2000)
+        self.education = life_states.Education(1)
         self.pleasure = life_states.Pleasure(1, 1)
-        self.love = life_states.Love(1, 1)
-        self.employment = life_states.Employment(1, 1)
+        self.social_life = life_states.SocialLife(1, 1)
+        self.employment = life_states.Employment(200)
         self.law = life_states.Law(1, 1)
         self.social_attitudes = life_states.SocialAttitudes(1, 1)

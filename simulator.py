@@ -10,8 +10,6 @@ class SimulatorGame:
     # constants
     TOTAL_NUMBER_OF_WEEKS = 8
     ACTIONS_ALLOWED_PER_WEEK = 3
-    EDUCATION_PROGRAM_DROPOUT_CUTOFF = 60
-    WORK_WEEKS_MISSED_CAUSING_TERMINATION = 4
 
     # game state information
     agent_in_play = 0
@@ -20,11 +18,21 @@ class SimulatorGame:
     actions_performed_this_week = 0
 
     # education state information
+    EDUCATION_PROGRAM_DROPOUT_CUTOFF = 60
+    HIGHSCHOOL_DROPOUT_CUTOFF = 80
+    WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA = 156
+    WEEKS_NEEDED_FOR_BACHELOR_DEGREE = 208
     in_study_program = False
+    total_weeks_studied_in_program = 0
     study_weeks_missed = 0
 
     # employment state information
+    WORK_WEEKS_MISSED_CAUSING_TERMINATION = 4
+    WEEKS_NEEDED_SECOND_LEVEL = 70
+    WEEKS_NEEDED_THIRD_LEVEL = 280
+    WEEKS_NEEDED_FOURTH_LEVEL = 560
     work_weeks_missed = 0
+    consecutive_weeks_worked = 0
 
 
     def __init__(self, name, user_type):
@@ -45,9 +53,7 @@ class SimulatorGame:
                         if self.invoke_action_on_number(action_to_perform):
                             self.actions_performed_this_week += 1
                     else:
-                        self.actions_performed_this_week = 0
-                        self.number_of_weeks_passed += 1
-                        self.new_week_start()
+                        self.week_end()
                 else:
                     self.end_game()
 
@@ -56,7 +62,7 @@ class SimulatorGame:
         self.build_life_elements()
     
     def build_agent(self):
-        self.agent_in_play = agent.Agent("Andrew", 24, "Hispanic", "Non-Binary", "Male", "Lower Middle")
+        self.agent_in_play = agent.Agent("Andrew", 24, "Hispanic", "Non-Binary", "Male", "Underclass")
 
     def build_life_elements(self):
         self.life_element_state = life_elements.LifeElements()
@@ -96,15 +102,34 @@ class SimulatorGame:
         print("\n")
         return True
 
+    def week_end(self):
+        # TODO: check to see if the agent studied this week; if they didn't, add to number of weeks not studied. If the number
+        # exceeds the threshold for the degree they are working towards (i.e., WEEKS_NEEDED_FOR_BACHELOR_DEGREE), then they drop out,
+        # setting their in_study_program to False and their number_of_weeks_study to 0
+        self.actions_performed_this_week = 0
+        self.number_of_weeks_passed += 1
+        self.new_week_start()
+
     def new_week_start(self):
-        print("Starting a new week... \n")
+        weekly_upkeep = self.weekly_upkeep_per_social_class(self.agent_in_play.social_class.class_identification, self.life_element_state.wealth.money)
+        if not self.life_element_state.wealth.Withdraw(weekly_upkeep):
+            # TODO: If we're here, that means the agent just went into debt, we need to make bad things happen here
+            print("Uh-oh, looks like somebody's in debt ;)")
+        print("Starting a new week, upkeep: " + str(weekly_upkeep) + " \n")
 
     #------------------------------------------------ Actions ---------------------------------------------------#
+
     def study_action(self):
+        # TODO: check to see if is_in_study_program; if they aren't, the study action does a random roll to see if they
+        # enroll. If they are already in a study program, then:
+        #         1. add to number of weeks studied in program
+        #         2. set the value of studied_this_week to True
         print("Agent studying")
 
     def work_action(self):
-        print("Agent working")
+        amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
+        self.life_element_state.wealth.Deposit(amount_earned)
+        print("Agent working, made " + str(amount_earned) + "$")
 
     def anti_social_action(self):
         print("Agent stealing some shit")
@@ -122,19 +147,21 @@ class SimulatorGame:
         print("Total weeks passed: " + str(self.number_of_weeks_passed))
         print("Actions taken this week: " + str(self.actions_performed_this_week))
         print("")
-        print("Social Attitudes: " + self.percentage_from_float(0.4))
-        print("Health: " + self.percentage_from_float(0.5))
-        print("Wealth: " + str(3400))
-        print("Education: " + self.educational_attainment_from_tier(2))
-        print("Pleasure: " + self.percentage_from_float(0.72))
-        print("Social Life: " + self.percentage_from_float(0.84))
+        print("Social Attitudes: " + self.percentage_from_float(self.life_element_state.social_attitudes.average_value()))
+        print("Health: " + self.percentage_from_float(self.life_element_state.health.average_value()))
+        print("Wealth: " + str(self.life_element_state.wealth.money))
+        print("Education: " + self.educational_attainment_from_tier(self.life_element_state.education.level))
+        print("Pleasure: " + self.percentage_from_float(self.life_element_state.pleasure.average_value()))
+        print("Social Life: " + self.percentage_from_float(self.life_element_state.social_life.average_value()))
         print("Employment: " + str(200) + "$ /week")
         print("Law: " + self.percentage_from_float(0.3))
         print("")
+
     #------------------------------------------------ Actions ---------------------------------------------------#
 
 
     #------------------------------------------------- Utils -----------------------------------------------------#
+
     def test(self):
         print("Testing...")
 
@@ -158,4 +185,29 @@ class SimulatorGame:
             return "Masters degree"
         elif 6:
             return "Doctorate (PhD)"
+
+    def random_roll():
+        
+    
+    def weekly_upkeep_per_social_class(self, social_class, total_wealth):
+        # ["Underclass", "Working Poor", "Working", "Lower Middle", "Upper Middle", "Lower Upper", "Upper Upper"]
+        if total_wealth < 9000:
+            total_wealth = 9000
+        total_wealth_by_weeks = total_wealth / 52
+        if social_class == "Underclass":
+            percent_of_total_wealth = 0.95
+        elif social_class == "Working Poor":
+            percent_of_total_wealth = 0.92
+        elif social_class == "Working":
+            percent_of_total_wealth = 0.82
+        elif social_class == "Lower Middle":
+            percent_of_total_wealth = 0.76
+        elif social_class == "Upper Middle":
+            percent_of_total_wealth = 0.65
+        elif social_class == "Lower Upper":
+            percent_of_total_wealth = 0.40
+        elif social_class == "Upper Upper":
+            percent_of_total_wealth = 0.12
+
+        return int(total_wealth_by_weeks * percent_of_total_wealth)
     #------------------------------------------------- Utils -----------------------------------------------------#

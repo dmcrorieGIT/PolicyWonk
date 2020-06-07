@@ -9,21 +9,29 @@ class Health(LifeState):
         self.mental_health = mental_health
         self.physical_health = physical_health
 
-class Income(LifeState):
-    category_1 = 0.5
-    category_2 = 0.5
+    def average_value(self):
+        return (self.mental_health + self.physical_health) / 2
 
-    def __init__(self, category_1, category_2):
-        self.category_1 = category_1
-        self.category_2 = category_2
+class Wealth(LifeState):
+    money = 0
+
+    def __init__(self, money):
+        self.money = money
+
+    def Withdraw(self, amount):
+        self.money -= amount
+        # if this withdraw put them in the negative, then return
+        # 'False' for in debt
+        return self.money > 0
+
+    def Deposit(self, amount):
+        self.money += amount
 
 class Education(LifeState):
-    category_1 = 0.5
-    category_2 = 0.5
+    level = 0
 
-    def __init__(self, category_1, category_2):
-        self.category_1 = category_1
-        self.category_2 = category_2
+    def __init__(self, level):
+        self.level = level
 
 class Pleasure(LifeState):
     category_1 = 0.5
@@ -33,21 +41,28 @@ class Pleasure(LifeState):
         self.category_1 = category_1
         self.category_2 = category_2
 
-class Love(LifeState):
+    def average_value(self):
+        return (self.category_1 + self.category_2) / 2
+
+class SocialLife(LifeState):
     category_1 = 0.5
     category_2 = 0.5
 
     def __init__(self, category_1, category_2):
         self.category_1 = category_1
         self.category_2 = category_2
+
+    def average_value(self):
+        return (self.category_1 + self.category_2) / 2
 
 class Employment(LifeState):
-    category_1 = 0.5
-    category_2 = 0.5
+    amount_per_week = 0
 
-    def __init__(self, category_1, category_2):
-        self.category_1 = category_1
-        self.category_2 = category_2
+    def __init__(self, amount_per_week):
+        self.amount_per_week = amount_per_week
+
+    def average_value(self):
+        return (self.category_1 + self.category_2) / 2
 
 class Law(LifeState):
     category_1 = 0.5
@@ -57,6 +72,9 @@ class Law(LifeState):
         self.category_1 = category_1
         self.category_2 = category_2
 
+    def average_value(self):
+        return (self.category_1 + self.category_2) / 2
+
 class SocialAttitudes(LifeState):
     category_1 = 0.5
     category_2 = 0.5
@@ -64,3 +82,6 @@ class SocialAttitudes(LifeState):
     def __init__(self, category_1, category_2):
         self.category_1 = category_1
         self.category_2 = category_2
+    
+    def average_value(self):
+        return (self.category_1 + self.category_2) / 2
