@@ -177,6 +177,8 @@ class SimulatorGame:
             print("Agent working, made " + str(amount_earned) + "$")
         else:
             print("Agent looking for work")
+            if (self.look_for_work()):
+                self.life_element_state.emp
 
     def anti_social_action(self):
         print("Agent stealing some shit")
@@ -206,6 +208,14 @@ class SimulatorGame:
 
     #------------------------------------------------ Actions ---------------------------------------------------#
 
+    #---------------------------------------------- Sub-Actions -------------------------------------------------#
+
+    def look_for_work(self):
+        # TODO: make this based on agent attribute data
+        # TODO: make this be affected by policy
+        return self.random_roll() > 0.2
+
+    #---------------------------------------------- Sub-Actions -------------------------------------------------#
 
     #------------------------------------------------- Utils -----------------------------------------------------#
 
