@@ -9,7 +9,7 @@ class SimulatorGame:
     game_in_progress = True
 
     # constants
-    TOTAL_NUMBER_OF_WEEKS = 8
+    TOTAL_NUMBER_OF_WEEKS = 80
     ACTIONS_ALLOWED_PER_WEEK = 3
 
     # game state information
@@ -30,7 +30,7 @@ class SimulatorGame:
 
     # employment state information
     WORK_WEEKS_MISSED_CAUSING_TERMINATION = 4
-    WEEKS_NEEDED_SECOND_LEVEL = 70
+    WEEKS_NEEDED_SECOND_LEVEL = 7
     WEEKS_NEEDED_THIRD_LEVEL = 280
     WEEKS_NEEDED_FOURTH_LEVEL = 560
     work_weeks_missed = 0
@@ -125,8 +125,9 @@ class SimulatorGame:
         if self.work_weeks_missed >= self.WORK_WEEKS_MISSED_CAUSING_TERMINATION:
             self.life_element_state.employment.amount_per_week = 0
             self.consecutive_weeks_worked = 0
-            return
 
+        if self.life_element_state.employment.amount_per_week == 0:
+            return
         weeks_needed_for_promotion = self.get_weeks_needed_for_promotion(self.life_element_state.employment.amount_per_week)
         if self.consecutive_weeks_worked >= weeks_needed_for_promotion:
             self.promotion()
@@ -172,13 +173,19 @@ class SimulatorGame:
     def work_action(self):
         if self.life_element_state.employment.amount_per_week > 0:
             self.has_worked_this_week = True
+            self.consecutive_weeks_worked += 1
             amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
             self.life_element_state.wealth.Deposit(amount_earned)
             print("Agent working, made " + str(amount_earned) + "$")
         else:
+            self.work_weeks_missed = 0
+            self.has_worked_this_week = True
             print("Agent looking for work")
             if (self.look_for_work()):
-                self.life_element_state.emp
+                self.life_element_state.employment.raise_employment_status(self.employment_static_amount)
+                print("Agent found work!")
+            else:
+                print("Agent did not find work...")
 
     def anti_social_action(self):
         print("Agent stealing some shit")
