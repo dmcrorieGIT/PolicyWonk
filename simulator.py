@@ -296,6 +296,7 @@ class SimulatorGame:
         return self.agent_in_play.get_agent_attribute()
 
     def education_attribute_modifiers(self):
+        pass
         
 
     
