@@ -439,7 +439,7 @@ class SimulatorGame:
     #------------------------------------------------- Utils -----------------------------------------------------#
 
     def test(self):
-        self.consecutive_weeks_worked += 60
+        self.total_weeks_studied_in_program += 50
 
     def end_game(self):
         print("Simulation has ended, thanks for playing!")
@@ -449,15 +449,15 @@ class SimulatorGame:
         return str(value * 100)
     
     def educational_attainment_from_tier(self, tier):
-        if 1:
+        if tier == 1:
             return "Less than highschool"
-        elif 2:
+        elif tier == 2:
             return "Highschool diploma and/or some college"
-        elif 3:
+        elif tier == 3:
             return "Bachelors degree"
-        elif 4:
+        elif tier == 4:
             return "Masters degree"
-        elif 5:
+        elif tier == 5:
             return "Doctorate (PhD)"
 
     def random_roll(self):
