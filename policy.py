@@ -138,3 +138,32 @@ class StatusQuo:
             "Taxes": 0.37
         }
     }
+
+    def looking_for_work_percentage(self):
+        # TODO: do dis
+        return 0.2
+    
+    def taxes(self):
+        # TODO: do dis
+        return 0.2
+
+    def depression_percentage(self):
+        # TODO: do this as well
+        return 0.2
+
+    def illness_percentage(self):
+        # TODO: do this as well
+        return 0.2
+
+    def law_percentage(self):
+        # TODO: do this as well
+        return 0.2
+
+    def education_percentage(self):
+        # TODO: do this
+        return 0.2
+    
+    def law_percentage(self):
+        # TODO: do this
+        return 0.95
+

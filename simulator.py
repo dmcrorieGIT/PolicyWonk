@@ -2,6 +2,7 @@ import agent
 import life_elements
 from os import system, name
 import random
+import policy
 
 class SimulatorGame:
     name = ""
@@ -112,11 +113,11 @@ class SimulatorGame:
 
     def check_for_depressed_or_illness(self):
         if self.depressed:
-            if self.random_roll() <= 0.2:
+            if self.random_roll() <= policy.StatusQuo.depression_percentage():
                 print("Can't take action, depressed")
                 return True
         if self.physically_ill:
-            if self.random_roll() <= 0.2:
+            if self.random_roll() <= policy.StatusQuo.illness_percentage():
                 print("Can't take action, too ill")
                 return True
         return False
@@ -237,7 +238,7 @@ class SimulatorGame:
                 self.study_weeks_missed + 1
                 if self.study_weeks_missed >= self.EDUCATION_PROGRAM_DROPOUT_CUTOFF:
                     dropout_check = self.random_roll()
-                    if dropout_check <= 0.2:
+                    if dropout_check <= policy.StatusQuo.education_percentage():
                         self.in_study_program = False
                         print("You've Dropped Out.")
                     else:
@@ -326,7 +327,7 @@ class SimulatorGame:
         print("Agent is committing a crime. Will they be caught?")
 
         investigation = self.random_roll() + self.NUMBER_OF_CRIMES_COMMITTED/100
-        if investigation >= 0.95:
+        if investigation >= policy.StatusQuo.law_percentage():
             print("Agent is caught. Incarceration")
             self.police_action()
         else:
@@ -495,7 +496,7 @@ class SimulatorGame:
 
     def get_taxes_on_income(self, amount):
         # TODO: use policy to make this more real
-        return amount * 0.2
+        return amount * policy.StatusQuo.taxes()
     
     def clear_screen(self):
         if name == "posix":
