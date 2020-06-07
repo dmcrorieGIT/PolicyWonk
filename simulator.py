@@ -125,7 +125,8 @@ class SimulatorGame:
         if self.work_weeks_missed >= self.WORK_WEEKS_MISSED_CAUSING_TERMINATION:
             self.life_element_state.employment.amount_per_week = 0
             self.consecutive_weeks_worked = 0
-        
+            return
+
         weeks_needed_for_promotion = self.get_weeks_needed_for_promotion(self.life_element_state.employment.amount_per_week)
         if self.consecutive_weeks_worked >= weeks_needed_for_promotion:
             self.promotion()
@@ -146,6 +147,7 @@ class SimulatorGame:
             # TODO: If we're here, that means the agent just went into debt, we need to make bad things happen here
             print("Uh-oh, looks like somebody's in debt ;)")
         print("Starting a new week, upkeep: " + str(weekly_upkeep) + " \n")
+        self.has_worked_this_week = False
 
     #------------------------------------------------ Actions ---------------------------------------------------#
 
@@ -166,11 +168,12 @@ class SimulatorGame:
 
     def work_action(self):
         if self.life_element_state.employment.amount_per_week > 0:
+            self.has_worked_this_week = True
             amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
             self.life_element_state.wealth.Deposit(amount_earned)
             print("Agent working, made " + str(amount_earned) + "$")
         else:
-            pass
+            print("Agent looking for work")
 
     def anti_social_action(self):
         print("Agent stealing some shit")
