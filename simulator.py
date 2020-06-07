@@ -228,7 +228,7 @@ class SimulatorGame:
         weekly_upkeep = self.weekly_upkeep_per_social_class(self.agent_in_play.social_class.class_identification, self.life_element_state.wealth.money)
         if not self.life_element_state.wealth.Withdraw(weekly_upkeep):
             self.debt_consequences()
-        print("Starting a new week, upkeep: " + str(weekly_upkeep) + " \n")
+        print("Starting a new week, cost of living: -$" + str(weekly_upkeep) + " \n")
         self.has_worked_this_week = False
         self.has_socialized_this_week = False
         self.has_practiced_self_care_this_week = False
@@ -240,14 +240,18 @@ class SimulatorGame:
         if self.check_for_depressed_or_illness():
             return
         if not self.in_study_program:
+            print("Agent not in school - trying to enroll.")
             enrollment_check = self.random_roll()
             if enrollment_check >= 0.2: #have check affected by attributes
                 self.in_study_program = True
+                print("Successfully enrolled in school.")
+            else:
+                print("Unsuccessful in enrollment.")
                 
         else:
             self.has_studied_this_week = True
             self.total_weeks_studied_in_program += 1
-            
+            print("Agent studying")
             education_level = self.life_element_state.education.level
             
             if education_level == 1:
@@ -270,9 +274,6 @@ class SimulatorGame:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
                     print("Congratulations! You've graduated with a PhD.")
-            else:
-                print("Agent studying")
-            
         
 
     def work_action(self):
@@ -308,7 +309,7 @@ class SimulatorGame:
             self.police_action()
         else:
             print("Crime is a success! You've gotten better at it.")
-            print("Agent Earned $" + amount_earned)
+            print("Agent Earned $" + str(amount_earned))
             self.life_element_state.wealth.Deposit(amount_earned)
 
     def police_action(self):
@@ -316,7 +317,7 @@ class SimulatorGame:
             self.is_incarcerated = True
             self.NUMBER_OF_INCARCERATIONS += 1
             self.WEEKS_OF_PUNISHMENT = self.NUMBER_OF_CRIMES_COMMITTED*self.NUMBER_OF_INCARCERATIONS
-            print("You have been punished to serve "+self.WEEKS_OF_PUNISHMENT+" weeks in prison.")
+            print("You have been punished to serve "+str(self.WEEKS_OF_PUNISHMENT)+" weeks in prison.")
         else:
             self.WEEKS_SINCE_LAST_INCARCERATION += 1
             if self.WEEKS_SINCE_LAST_INCARCERATION >= self.WEEKS_OF_PUNISHMENT:
