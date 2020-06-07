@@ -170,7 +170,7 @@ class StatusQuo:
 
     def education_percentage(self, attributes):
         raceMod = self.raceDict[attributes[1].race_name]["Education"]
-        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation]["Education"]
+        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation_name]["Education"]
         sexMod = self.sexDict[attributes[3].sex_classification]["Education"]
         socialClassMod = self.socialClassDict[attributes[4].class_identification]["Education"] 
 
@@ -179,7 +179,7 @@ class StatusQuo:
     
     def law_percentage(self, attributes):
         raceMod = self.raceDict[attributes[1].race_name]["Education"]
-        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation]["Education"]
+        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation_name]["Education"]
         sexMod = self.sexDict[attributes[3].sex_classification]["Education"]
         socialClassMod = self.socialClassDict[attributes[4].class_identification]["Education"] 
         
