@@ -11,6 +11,27 @@ class Health(LifeState):
 
     def average_value(self):
         return (self.mental_health + self.physical_health) / 2
+    
+    def self_care(self, mental_change, physical_change):
+        self.mental_health += mental_change
+        if (self.mental_health > 1):
+            self.mental_health = 1
+        self.physical_health += physical_change
+        if (self.physical_health > 1):
+            self.physical_health = 1
+    
+    def decrease_in_physical_health(self, physical_change):
+        self.physical_health -= physical_change
+        if self.physical_health < 0:
+            self.physical_health = 0
+        return self.physical_health > 0.25
+    
+    def decrease_in_mental_health(self, mental_change):
+        self.mental_health -= mental_change
+        if self.mental_health < 0:
+            self.mental_health = 0
+        return self.mental_health > 0.25
+    
 
 class Wealth(LifeState):
     money = 0

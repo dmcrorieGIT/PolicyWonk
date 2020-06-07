@@ -42,6 +42,9 @@ class SimulatorGame:
     # socialization state information
     has_socialized_this_week = False
 
+    # health state information
+    has_practiced_self_care_this_week = False
+
     def __init__(self, name, user_type):
         self.name = name
         self.user_type
@@ -115,6 +118,7 @@ class SimulatorGame:
         # setting their in_study_program to False and their number_of_weeks_study to 0
         self.check_work()
         self.check_socialization()
+        self.check_health()
         self.actions_performed_this_week = 0
         self.number_of_weeks_passed += 1
         self.new_week_start()
@@ -138,8 +142,15 @@ class SimulatorGame:
     
     def check_socialization(self):
         if not self.has_socialized_this_week:
-            if not self.life_element_state.social_life.SocialWithdrawl(0.25):
+            if not self.life_element_state.social_life.SocialWithdrawl(0.15):
                 self.social_deprivation()
+    
+    def check_health(self):
+        if not self.has_practiced_self_care_this_week:
+            if not self.life_element_state.health.decrease_in_mental_health(0.1):
+                self.mental_health_problems()
+            if not self.life_element_state.health.decrease_in_physical_health(0.1):
+                self.physical_health_problems()
 
     def promotion(self):
         amount_per_week = self.life_element_state.employment.amount_per_week
@@ -173,11 +184,11 @@ class SimulatorGame:
     def new_week_start(self):
         weekly_upkeep = self.weekly_upkeep_per_social_class(self.agent_in_play.social_class.class_identification, self.life_element_state.wealth.money)
         if not self.life_element_state.wealth.Withdraw(weekly_upkeep):
-            # TODO: If we're here, that means the agent just went into debt, we need to make bad things happen here
-            print("Uh-oh, looks like somebody's in debt ;)")
+            self.debt_consequences()
         print("Starting a new week, upkeep: " + str(weekly_upkeep) + " \n")
         self.has_worked_this_week = False
         self.has_socialized_this_week = False
+        self.has_practiced_self_care_this_week = False
 
     #------------------------------------------------ Actions ---------------------------------------------------#
 
@@ -253,6 +264,8 @@ class SimulatorGame:
         print("Agent living that good life")
     
     def self_care_action(self):
+        self.life_element_state.health.self_care(0.15, 0.15)
+        self.has_practiced_self_care_this_week = True
         print("Agent is taking care of himself")
 
     def print_stats(self):
@@ -295,6 +308,18 @@ class SimulatorGame:
     def social_deprivation(self):
         # TODO: social deprivation, cause problems with the other states if this is reached
         print("Experiencing negative effects of social deprivation...")
+
+    def debt_consequences(self):
+        # TODO: If we're here, that means the agent just went into debt, we need to make bad things happen here
+        print("Uh-oh, looks like somebody's in debt ;)")
+
+    def mental_health_problems(self):
+        # TODO: cause problems elsewhere when this is reached
+        print("Experiencing mental health issues")
+    
+    def physical_health_problems(self):
+        # TODO: cause problems elsewhere when this is reached
+        print("Experiencing physical health issues")
 
     #--------------------------------------------- Consequences --------------------------------------------------#
 
