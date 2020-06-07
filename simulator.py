@@ -98,7 +98,7 @@ class SimulatorGame:
         self.build_policy()
     
     def build_agent(self):
-        self.agent_in_play = agent.Agent("Andrew", 24, "Hispanic", "Non-Binary", "Male", "Underclass")
+        self.agent_in_play = agent.Agent("Andrew", 24, "Hispanic", "Non-LGBTQ+", "Male", "Underclass")
 
     def build_life_elements(self):
         self.life_element_state = life_elements.LifeElements()
@@ -118,11 +118,11 @@ class SimulatorGame:
 
     def check_for_depressed_or_illness(self):
         if self.depressed:
-            if self.random_roll() <= self.policy_used.depression_percentage():
+            if self.random_roll() <= self.policy_used.depression_percentage(self.agent_attribute_checks()):
                 print("Can't take action, depressed")
                 return True
         if self.physically_ill:
-            if self.random_roll() <= self.policy_used.illness_percentage():
+            if self.random_roll() <= self.policy_used.illness_percentage(self.agent_attribute_checks()):
                 print("Can't take action, too ill")
                 return True
         return False
@@ -394,7 +394,7 @@ class SimulatorGame:
     def look_for_work(self):
         # TODO: make this based on agent attribute data
         # TODO: make this be affected by policy
-        return self.random_roll() > policy.StatusQuo.looking_for_work_percentage()
+        return self.random_roll() > self.policy_used.looking_for_work_percentage(self.agent_attribute_checks())
 
     #---------------------------------------------- Sub-Actions -------------------------------------------------#
     #---------------------------------------------Attribute Checks-----------------------------------------------#

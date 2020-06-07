@@ -143,21 +143,30 @@ class StatusQuo:
         }
     }
 
-    def looking_for_work_percentage(self):
-        # TODO: do dis
+    def looking_for_work_percentage(self, agent_characteristics):
         return 0.2
     
     def taxes(self, agent_characteristics):
         # TODO: do dis
         return self.socialClassDict[agent_characteristics[4].class_identification]["Taxes"]
 
-    def depression_percentage(self):
-        # TODO: do this as well
-        return 0.2
+    def depression_percentage(self, attributes):
+        raceMod = self.raceDict[attributes[1].race_name]["Depression"]
+        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation_name]["Depression"]
+        sexMod = self.sexDict[attributes[3].sex_classification]["Depression"]
+        socialClassMod = self.socialClassDict[attributes[4].class_identification]["Depression"]
 
-    def illness_percentage(self):
-        # TODO: do this as well
-        return 0.2
+        modSum = raceMod + sexualOrientMod + sexMod + socialClassMod
+        return modSum
+
+    def illness_percentage(self, attributes):
+        raceMod = self.raceDict[attributes[1].race_name]["Illness"]
+        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation_name]["Illness"]
+        sexMod = self.sexDict[attributes[3].sex_classification]["Illness"]
+        socialClassMod = self.socialClassDict[attributes[4].class_identification]["Illness"]
+
+        modSum = raceMod + sexualOrientMod + sexMod + socialClassMod
+        return modSum
 
     def education_percentage(self, attributes):
         raceMod = self.raceDict[attributes[1].race_name]["Education"]
