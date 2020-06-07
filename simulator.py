@@ -12,6 +12,7 @@ class SimulatorGame:
     # constants
     TOTAL_NUMBER_OF_WEEKS = 80
     ACTIONS_ALLOWED_PER_WEEK = 3
+    ALLOWED_GAME_ACTIONS = [0, 1, 2, 3, 4, 5, 90, 98, 99]
 
     # game state information
     agent_in_play = 0
@@ -82,15 +83,29 @@ class SimulatorGame:
                             self.police_action()
                             self.week_end()
                         else:
-                            print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats")
-                            action_to_perform = int(input())
-                            self.clear_screen()
+                            action_to_perform = self.process_input()
                             if self.invoke_action_on_number(action_to_perform):
                                 self.actions_performed_this_week += 1
                     else:
                         self.week_end()
                 else:
                     self.end_game()
+
+    def process_input(self):
+        while True:
+            print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats \n[99]End Simulation")
+            action_to_perform = input()
+            try:
+                action_to_perform_as_int = int(action_to_perform)
+            except:
+                self.clear_screen()
+                print("Please enter a number. \n")
+                continue
+            self.clear_screen()
+            if action_to_perform_as_int in self.ALLOWED_GAME_ACTIONS:
+                return action_to_perform_as_int
+            else:
+                print("Not a valid action, please select again. \n")
 
     def build_simulation(self):
         self.build_agent()
@@ -148,9 +163,8 @@ class SimulatorGame:
         elif number == 98:
             self.test()
         elif number == 99:
-            self.game_in_progress = False
+            self.end_game()
         else:
-            print("Invalid action, please try again.")
             return False
         print("\n")
         return True
@@ -446,6 +460,7 @@ class SimulatorGame:
 
     def test(self):
         self.total_weeks_studied_in_program += 50
+        print("Agent is taking a secret test function")
 
     def end_game(self):
         print("Simulation has ended!")
