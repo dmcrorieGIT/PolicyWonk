@@ -159,15 +159,16 @@ class StatusQuo:
         # TODO: do this as well
         return 0.2
 
-    def law_percentage(self):
-        # TODO: do this as well
-        return 0.2
+    def education_percentage(self, attributes):
+        raceMod = raceDict[attributes[1]]["Education"]
+        sexualOrientMod = sexualOrientDict[attributes[2]]["Education"]
+        sexMod = sexDict[attributes[3]]["Education"]
+        socialClassMod = socialClassDict[attributes[4]]["Education"] 
 
-    def education_percentage(self):
-        # TODO: do this
+        new value = 0.95 - raceMod - sexualOrientMod - sexMod - socialClassMod
         return 0.2
     
-    def law_percentage(self):
-        # TODO: do this
+    def law_percentage(self, attributes, roll):
+        
         return 0.95
 

@@ -268,8 +268,8 @@ class SimulatorGame:
             return
         if not self.in_study_program:
             print("Agent not in school - trying to enroll.")
-            enrollment_check = self.random_roll()
-            if enrollment_check >= 0.2: #have check affected by attributes
+            enrollment_check = self.random_roll() # Random ROLL
+            if enrollment_check >= policy.StatusQuo.education_percentage(): #have check affected by attributes
                 self.in_study_program = True
                 print("Successfully enrolled in school.")
             else:
@@ -317,7 +317,7 @@ class SimulatorGame:
             self.work_weeks_missed = 0
             self.has_worked_this_week = True
             print("Agent looking for work")
-            if (self.look_for_work()):
+            if (self.look_for_work()): 
                 self.life_element_state.employment.raise_employment_status(self.employment_static_amount)
                 print("Agent found work!")
             else:
@@ -332,7 +332,7 @@ class SimulatorGame:
         print("Agent is committing a crime. Will they be caught?")
 
         investigation = self.random_roll() + self.NUMBER_OF_CRIMES_COMMITTED/100
-        if investigation >= policy.StatusQuo.law_percentage():
+        if investigation >= policy.StatusQuo.law_percentage(self.agent_attribute_checks(), investigation):
             print("Agent is caught. Incarceration")
             self.police_action()
         else:
@@ -394,7 +394,7 @@ class SimulatorGame:
     def look_for_work(self):
         # TODO: make this based on agent attribute data
         # TODO: make this be affected by policy
-        return self.random_roll() > 0.2
+        return self.random_roll() > policy.StatusQuo.looking_for_work_percentage()
 
     #---------------------------------------------- Sub-Actions -------------------------------------------------#
     #---------------------------------------------Attribute Checks-----------------------------------------------#
