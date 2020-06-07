@@ -19,3 +19,7 @@ class Agent:
 
     def test(self):
         print("Agent's age is: " + self.age.years_old)
+
+    def get_agent_attribute(self):
+        return [self.age, self.race, self.sexual_orientation, self.sex, self.social_class]
+
