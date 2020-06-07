@@ -210,22 +210,22 @@ class SimulatorGame:
             education_level = self.life_element_state.education.level
             
             if education_level == 1:
-                if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA:
+                if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
                     print("Congratulations! You've graduated with a Highschool Diploma.")
             elif education_level == 2:
-                if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_BACHELOR_DEGREE:
+                if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_BACHELOR_DEGREE:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
                     print("Congratulations! You've graduated with a Bachelor's Degree.")
             elif education_level == 3:
-                if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_MASTERS_DEGREE:
+                if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_MASTERS_DEGREE:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
                     print("Congratulations! You've graduated with a Master's Degree.")
             elif education_level == 4:
-                if total_weeks_studied_in_program >= WEEKS_NEEDED_FOR_PHD:
+                if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_PHD:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
                     print("Congratulations! You've graduated with a PhD.")
