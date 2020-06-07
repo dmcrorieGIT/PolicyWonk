@@ -12,7 +12,7 @@ class SimulatorGame:
     # constants
     TOTAL_NUMBER_OF_WEEKS = 80
     ACTIONS_ALLOWED_PER_WEEK = 3
-    ALLOWED_GAME_ACTIONS = [0, 1, 2, 3, 4, 5, 90, 98, 99]
+    ALLOWED_GAME_ACTIONS = [0, 1, 2, 3, 4, 5, 90, 91, 98, 99]
 
     # game state information
     agent_in_play = 0
@@ -93,7 +93,7 @@ class SimulatorGame:
 
     def process_input(self):
         while True:
-            print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats \n[99]End Simulation")
+            print("Select an action to perform: \n[0]Study \n[1]Work \n[2]Anti-Social Action \n[3]Socialize \n[4]Basic Pleasure \n[5]Self Care \n[90]See stats \n[91]See Career Information \n[99]End Simulation")
             action_to_perform = input()
             try:
                 action_to_perform_as_int = int(action_to_perform)
@@ -158,6 +158,9 @@ class SimulatorGame:
             self.self_care_action()
         elif number == 90:
             self.print_stats()
+            return False
+        elif number == 91:
+            self.print_career_information()
             return False
         # SUPER SECRET FUNTIME DEV ACTION :D
         elif number == 98:
@@ -299,21 +302,25 @@ class SimulatorGame:
                 if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
+                    self.total_weeks_studied_in_program = 0
                     print("Congratulations! You've graduated with a Highschool Diploma.")
             elif education_level == 2:
                 if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_BACHELOR_DEGREE:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
+                    self.total_weeks_studied_in_program = 0
                     print("Congratulations! You've graduated with a Bachelor's Degree.")
             elif education_level == 3:
                 if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_MASTERS_DEGREE:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
+                    self.total_weeks_studied_in_program = 0
                     print("Congratulations! You've graduated with a Master's Degree.")
             elif education_level == 4:
                 if self.total_weeks_studied_in_program >= self.WEEKS_NEEDED_FOR_PHD:
                     self.life_element_state.education.education_level_up()
                     self.in_study_program = False
+                    self.total_weeks_studied_in_program = 0
                     print("Congratulations! You've graduated with a PhD.")
         
 
@@ -387,6 +394,7 @@ class SimulatorGame:
         print("Agent is taking care of themself")
 
     def print_stats(self):
+        amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
         print("General Information")
         print("Total weeks passed:      " + str(self.number_of_weeks_passed))
         print("Actions taken this week: " + str(self.actions_performed_this_week))
@@ -403,8 +411,24 @@ class SimulatorGame:
         print("Education:               " + self.educational_attainment_from_tier(self.life_element_state.education.level))
         print("Pleasure:                " + self.percentage_from_float(self.life_element_state.pleasure.pleasure_level))
         print("Social Life:             " + self.percentage_from_float(self.life_element_state.social_life.satisfaction))
-        print("Employment:              " + str(200) + "$ /week")
+        print("Employment:              " + str(amount_earned) + "$ /week")
         print("Law:                     " + self.percentage_from_float(0.3))
+        print("")
+    
+    def print_career_information(self):
+        amount_earned = self.life_element_state.education.level * self.life_element_state.employment.amount_per_week
+        taxable_earnings = amount_earned - self.get_taxes_on_income(amount_earned)
+        weeks_needed_for_promotion = self.get_weeks_needed_for_promotion(self.life_element_state.employment.amount_per_week)
+        print("Employment Stats")
+        print("Weekly wage:                     " + str(amount_earned) + "$ /week")
+        print("Weeks worked towards promotion:  " + str(self.consecutive_weeks_worked))
+        print("Weeks needed for next promotion: " + str(weeks_needed_for_promotion))
+        print("Taxes on weekly wage:            " + str(amount_earned - taxable_earnings))
+        print("\nEducation Stats")
+        print("Current level of education:      " + self.educational_attainment_from_tier(self.life_element_state.education.level))
+        print("Currently enrolled in a program: " + str(self.in_study_program))
+        print("Weeks studied in program:        " + str(self.total_weeks_studied_in_program))
+        print("Weeks needed to graduate:        " + str(self.get_weeks_needed_for_graduation(self.life_element_state.education.level)))
         print("")
 
     #------------------------------------------------ Actions ---------------------------------------------------#
@@ -519,6 +543,18 @@ class SimulatorGame:
             return self.WEEKS_NEEDED_THIRD_LEVEL
         elif amount_per_week == 1000:
             return self.WEEKS_NEEDED_FOURTH_LEVEL
+    
+    def get_weeks_needed_for_graduation(self, current_education_level):
+        if current_education_level == 1:
+            return self.WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA
+        elif current_education_level == 2:
+            return self.WEEKS_NEEDED_FOR_BACHELOR_DEGREE
+        elif current_education_level == 3:
+            return self.WEEKS_NEEDED_FOR_MASTERS_DEGREE
+        elif current_education_level == 4:
+            return self.WEEKS_NEEDED_FOR_PHD
+        else:
+            return 999999999999999999
 
     def get_taxes_on_income(self, amount):
         # TODO: use policy to make this more real
