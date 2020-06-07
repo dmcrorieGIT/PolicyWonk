@@ -1,6 +1,7 @@
 import agent
 import life_elements
 from os import system, name
+import random
 
 class SimulatorGame:
     name = ""
@@ -23,6 +24,7 @@ class SimulatorGame:
     WEEKS_NEEDED_FOR_HIGHSCHOOL_DIPLOMA = 156
     WEEKS_NEEDED_FOR_BACHELOR_DEGREE = 208
     in_study_program = False
+    has_studied_this_week = False
     total_weeks_studied_in_program = 0
     study_weeks_missed = 0
 
@@ -124,6 +126,14 @@ class SimulatorGame:
         # enroll. If they are already in a study program, then:
         #         1. add to number of weeks studied in program
         #         2. set the value of studied_this_week to True
+        if not self.is_in_study_program:
+            enrollment_check = self.random_roll()
+            if enrollment_check >= 0.2:
+                self.is_in_study_program = True
+        else:
+            self.has_studied_this_week = True
+            self.total_weeks_studied_in_program += 1
+
         print("Agent studying")
 
     def work_action(self):
@@ -187,7 +197,7 @@ class SimulatorGame:
             return "Doctorate (PhD)"
 
     def random_roll():
-        
+        return random.randint(0,1)
     
     def weekly_upkeep_per_social_class(self, social_class, total_wealth):
         # ["Underclass", "Working Poor", "Working", "Lower Middle", "Upper Middle", "Lower Upper", "Upper Upper"]
