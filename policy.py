@@ -160,15 +160,20 @@ class StatusQuo:
         return 0.2
 
     def education_percentage(self, attributes):
-        raceMod = raceDict[attributes[1]]["Education"]
-        sexualOrientMod = sexualOrientDict[attributes[2]]["Education"]
-        sexMod = sexDict[attributes[3]]["Education"]
-        socialClassMod = socialClassDict[attributes[4]]["Education"] 
+        raceMod = self.raceDict[attributes[1].race_name]["Education"]
+        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation]["Education"]
+        sexMod = self.sexDict[attributes[3].sex_classification]["Education"]
+        socialClassMod = self.socialClassDict[attributes[4].class_identification]["Education"] 
 
-        new value = 0.95 - raceMod - sexualOrientMod - sexMod - socialClassMod
-        return 0.2
+        new_value = 0.10 + raceMod + sexualOrientMod + sexMod + socialClassMod
+        return new_value
     
-    def law_percentage(self, attributes, roll):
+    def law_percentage(self, attributes):
+        raceMod = self.raceDict[attributes[1].race_name]["Education"]
+        sexualOrientMod = self.sexualOrientDict[attributes[2].sexual_orientation]["Education"]
+        sexMod = self.sexDict[attributes[3].sex_classification]["Education"]
+        socialClassMod = self.socialClassDict[attributes[4].class_identification]["Education"] 
         
-        return 0.95
+        new_value = 0.95 - raceMod - sexualOrientMod - sexMod - socialClassMod
+        return new_value
 
