@@ -150,7 +150,7 @@ class SimulatorGame:
         elif number == 99:
             self.game_in_progress = False
         else:
-            print("Invalid action, please pay the fuck attention next time")
+            print("Invalid action, please try again.")
             return False
         print("\n")
         return True
@@ -370,7 +370,7 @@ class SimulatorGame:
     def self_care_action(self):
         self.life_element_state.health.self_care(0.15, 0.15)
         self.has_practiced_self_care_this_week = True
-        print("Agent is taking care of himself")
+        print("Agent is taking care of themself")
 
     def print_stats(self):
         print("Social Status:           " + self.agent_in_play.social_class.class_identification)
@@ -418,7 +418,7 @@ class SimulatorGame:
     def debt_consequences(self):
         self.life_element_state.health.decrease_in_physical_health(0.1)
         self.life_element_state.health.decrease_in_mental_health(0.1)
-        print("Uh-oh, looks like somebody's in debt ;)")
+        print("Uh-oh, looks like somebody's in debt.")
 
     def mental_health_problems(self):
         self.depressed = True
@@ -448,7 +448,7 @@ class SimulatorGame:
         self.total_weeks_studied_in_program += 50
 
     def end_game(self):
-        print("Simulation has ended, thanks for playing!")
+        print("Simulation has ended!")
         self.game_in_progress = False
     
     def percentage_from_float(self, value):

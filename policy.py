@@ -88,7 +88,7 @@ class StatusQuo:
         "Underclass": {
             "Illness": 0.0378,
             "Depression": 0.0087,
-            #"Education":#,
+            "Education": 0.0150,
             "Law": 0.00518,
             #"Residual Wealth":#
             "Taxes": 0.10
@@ -96,7 +96,7 @@ class StatusQuo:
         "Working Poor": {
             "Illness": 0.0332,
             "Depression": 0.0087,
-            #"Education":#,
+            "Education": 0.0130,
             "Law":0.00572,
             #"Residual Wealth":#
             "Taxes": 0.12
@@ -104,7 +104,7 @@ class StatusQuo:
         "Working": {
             "Illness": 0.0166,
             "Depression": 0.0051,
-            #"Education":#,
+            "Education": 0.010,
             "Law":0.00540,
             #"Residual Wealth":# 
             "Taxes": 0.17
@@ -112,7 +112,7 @@ class StatusQuo:
         "Lower Middle": {
             "Illness": 0.0080,
             "Depression": 0.0027,
-            #"Education":#,
+            "Education": 0.007,
             "Law":0.00320,
             #"Residual Wealth":#,
             "Taxes": 0.23
@@ -120,7 +120,7 @@ class StatusQuo:
         "Upper Middle": {
             "Illness":0.0050,
             "Depression": 0.0027,
-            #"Education":#,
+            "Education": 0.005,
             "Law": 0.0011,
             #"Residual Wealth":#,
             "Taxes": 0.27
@@ -128,7 +128,7 @@ class StatusQuo:
         "Lower Upper": {
             "Illness": 0,
             "Depression":0.0012,
-            #"Education":#,
+            "Education": 0.0030,
             "Law": -0.0030,
             #"Residual Wealth":#,
             "Taxes":0.37
@@ -136,7 +136,7 @@ class StatusQuo:
         "Upper Upper": {
             "Illness":0,
             "Depression": 0.0012,
-            #"Education":#,
+            "Education": 0.0020,
             "Law":-0.0050,
             #"Residual Wealth":#,
             "Taxes": 0.37
