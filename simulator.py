@@ -3,10 +3,11 @@ import life_elements
 from os import system, name
 import random
 import policy
+import ai_player
 
 class SimulatorGame:
     name = ""
-    user_type = "human"
+    user_type = "bot"
     game_in_progress = True
 
     # constants
@@ -71,25 +72,28 @@ class SimulatorGame:
         self.user_type
         self.agent = 0
         self.life_elements = 0
+        self.ai_player = ai_player.AIPlayer()
 
     def start_simulation(self):
         self.build_simulation()
         while self.game_in_progress:
-            if self.is_human():
-                if self.has_not_exceeded_game_time():
-                    if self.has_not_exceeded_weekly_actions():
-                        if self.is_incarcerated:
-                            print("Incarerated, can't take action")
-                            self.police_action()
-                            self.week_end()
-                        else:
-                            action_to_perform = self.process_input()
-                            if self.invoke_action_on_number(action_to_perform):
-                                self.actions_performed_this_week += 1
-                    else:
+            if self.has_not_exceeded_game_time():
+                if self.has_not_exceeded_weekly_actions():
+                    if self.is_incarcerated:
+                        print("Incarerated, can't take action")
+                        self.police_action()
                         self.week_end()
+                    else:
+                        if (self.is_human()):
+                            action_to_perform = self.process_input()
+                        else:
+                            action_to_perform = self.ai_player.make_decision()
+                        if self.invoke_action_on_number(action_to_perform):
+                            self.actions_performed_this_week += 1
                 else:
-                    self.end_game()
+                    self.week_end()
+            else:
+                self.end_game()
 
     def process_input(self):
         while True:
@@ -512,7 +516,7 @@ class SimulatorGame:
             return "Doctorate (PhD)"
 
     def random_roll(self):
-        return random.randint(0,1)
+        return random.random()
     
     def weekly_upkeep_per_social_class(self, social_class, total_wealth):
         # ["Underclass", "Working Poor", "Working", "Lower Middle", "Upper Middle", "Lower Upper", "Upper Upper"]
