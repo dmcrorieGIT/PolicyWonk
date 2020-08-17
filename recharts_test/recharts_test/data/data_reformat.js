@@ -20,3 +20,16 @@ const sortDataByYear = data => {
     })
     return sortByYear
 }
+
+const finalData = []
+for(const year in sortByYear){
+    finalData.push({ year })
+    sortByYear[year].forEach(obj => {
+        if (parseFloat(finalData[i][obj.COUNTRY > 0]){
+            finalData[i][obj.COUNTRY] = (finalData[i][obj.COUNTRY] + parseFloat(obj.Value)) / 2
+        }
+        else finalData[i][obj.COUNTRY] = 
+            parseFloat(obj.Value).toFixed(2)
+    })
+    i++
+}
